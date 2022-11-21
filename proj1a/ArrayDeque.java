@@ -29,7 +29,7 @@ public class ArrayDeque<T> {
   public void addFirst(T item) {
     // Check deque is full or not.
     if (isFull()) {
-      resize(capacity * 2);
+      resize((int)(capacity * 1.5));
     }
     // if front - 1 < 0, then + capacity to make sure index > 0.
     // if front - 1 > 0, then % capacity to make sure term [+capacity % capacity] = 0.
@@ -42,7 +42,7 @@ public class ArrayDeque<T> {
   public void addLast(T item) {
     // Check deque is full or not.
     if (isFull()) {
-      resize(capacity * 2);
+      resize((int)(capacity * 1.5));
     }
     // Insert collision with addFirst. Be careful about the insert order.
     items[rear] = item;
