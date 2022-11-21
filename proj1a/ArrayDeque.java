@@ -164,6 +164,8 @@ public class ArrayDeque<T> {
   /** Resize, tricky to implement. */
   private  void resize(int newSize) {
     T[] newArray= (T[]) new Object[newSize];
+    // save size
+    int size = size();
     if (front < rear) {
       // copy [front, rear) to [0, size) of new array.
       for (int i = 0, j = front; i < size() && i + j < capacity; ++i) {
@@ -188,7 +190,7 @@ public class ArrayDeque<T> {
     assert front != rear;
     items = newArray;
     front = 0;
-    rear = size();
+    rear = size; // rear = size() = 0, items has been released.
     capacity = newSize;
   }
 }
