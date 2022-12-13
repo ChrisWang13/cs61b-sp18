@@ -5,11 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import lab9.ArrayMap;
 
-/**
- * Tests by Brendan Hu, Spring 2015, revised for 2018 by Josh Hug
- */
-public class TestArrayMap {
 
+public class TestArrayMap {
     @Test
     public void sanityGenericsTest() {
         try {
@@ -82,5 +79,19 @@ public class TestArrayMap {
         ArrayMap<String, Integer> b = new ArrayMap<>();
         b.put("hi", 1);
         assertTrue(b.containsKey("hi") && b.get("hi") != null);
+    }
+    @Test
+    public void funTest() {
+        ArrayMap<Integer, Integer> a = new ArrayMap<>();
+        a.put(2, 9);
+        a.put(1, 100);
+        a.remove(2);
+        // Padding
+        for(int i = 100; i < 101; ++i) {
+            a.put(i, 2 * i);
+        }
+        // End of padding
+        a.put(1, 200);
+        a.remove(1);
     }
 }

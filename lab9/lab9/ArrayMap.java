@@ -6,7 +6,6 @@ import java.util.Set;
 
 /**
  * An array based implementation of the Map61B class.
- * @author Josh Hug (mostly done in lecture)
  */
 public class ArrayMap<K, V> implements Map61B<K, V> {
     private K[] keys;
@@ -23,7 +22,11 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
      *  -1 otherwise. */
     private int keyIndex(K key) {
         for (int i = 0; i < size; i += 1) {
+            // In java, use == operator to compare same object
+            // reference, e.g., immutable string in string pool.
+            // String s1 = "A"; String s2 = "A"; assert (s1 == s2);
             if (keys[i].equals(key)) {
+                // equals method is overridden to compare content.
                 return i;
             }
         }
@@ -45,7 +48,8 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
             throw new IllegalArgumentException("Null values not allowed.");
         }
         int index = keyIndex(key);
-        if (index == -1) {
+        // Index not found, check whether resize or not and insert <K,V>.
+        if (index <= -1) {
             if (size == keys.length) {
                 resize(keys.length * 2);
             }
@@ -69,7 +73,7 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
     @Override
     public V get(K key) {
         int index = keyIndex(key);
-        if (index == -1) {
+        if (index <= -1) {
             return null;
         }
         return values[index];
@@ -94,6 +98,7 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
         int keyLocation = keyIndex(key);
         V returnValue = null;
         if (keyLocation > -1) {
+            // Move last item to current index and ignore last item (size = size - 1).
             returnValue = values[keyLocation];
             keys[keyLocation] = keys[size - 1];
             values[keyLocation] = values[size - 1];
@@ -119,6 +124,7 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
         int keyLocation = keyIndex(key);
         V returnValue = null;
         if (keyLocation > -1 && values[keyLocation].equals(value)) {
+            // Move last item to current index and ignore last item (size = size - 1).
             returnValue = values[keyLocation];
             keys[keyLocation] = keys[size - 1];
             values[keyLocation] = values[size - 1];
