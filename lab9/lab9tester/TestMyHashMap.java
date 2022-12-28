@@ -5,11 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import lab9.MyHashMap;
 
-/**
- * Tests by Brendan Hu, Spring 2015, revised for 2018 by Josh Hug
- */
 public class TestMyHashMap {
-
     @Test
     public void sanityGenericsTest() {
         try {
