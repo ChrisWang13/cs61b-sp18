@@ -18,8 +18,8 @@ public class MyHashMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     private ArrayMap<K, V>[] buckets;
     private int size = 0;
 
-    private int loadFactor() {
-        return size / buckets.length;
+    private double loadFactor() {
+        return (double) size / buckets.length;
     }
 
     public MyHashMap() {
@@ -27,7 +27,9 @@ public class MyHashMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         this.clear();
     }
 
-    /** Removes all the mappings from this map. */
+    /**
+     * Removes all the mappings from this map.
+     */
     @Override
     public void clear() {
         this.size = 0;
@@ -61,10 +63,14 @@ public class MyHashMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     /** Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
+        // Resize the bucket
+        if (loadFactor() > MAX_LF) {
+            resize((int) (1.5 * buckets.length));
+        }
         // Calculate hash function to get the location of bucket
         int loc = hash(key);
         // Update existed key, first delete them
-        if (buckets[loc].containsKey(key)) {
+        if (buckets[loc] != null && buckets[loc].containsKey(key)) {
             buckets[loc].remove(key);
             size = size - 1;
         }
@@ -73,14 +79,36 @@ public class MyHashMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         size = size + 1;
     }
 
-    /** Returns the number of key-value mappings in this map. */
+    /**
+     * Resize HashMap when loadFactor > Max load factor
+     */
+    private void resize(int newLen) {
+        // Save and clear the old, create a new hashMap
+        ArrayMap<K, V>[] oldBucket = buckets;
+        // Cache oldSize
+        int oldSize = size;
+        buckets = new ArrayMap[newLen];
+        // Create ArrayMap for each node
+        this.clear();
+        size = oldSize;
+        // Add items to new buckets
+        for (ArrayMap<K, V> ks : oldBucket) {
+            for (K k : ks) {
+                buckets[hash(k)].put(k, ks.get(k));
+            }
+        }
+    }
+
+    /**
+     * Returns the number of key-value mappings in this map.
+     */
     @Override
     public int size() {
         int rand = (int) (Math.random() * 2);
         if (rand == 0) {
             int res = 0;
-            for (int i = 0; i < buckets.length; ++i) {
-                res += buckets[i].size();
+            for (ArrayMap<K, V> bucket : buckets) {
+                res += bucket.size();
             }
             return res;
         }
@@ -92,8 +120,8 @@ public class MyHashMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     public Set<K> keySet() {
         HashSet<K> res = new HashSet<>();
         for (int i = 0; i < buckets.length; ++i) {
-            for (K e : buckets[i]) {
-                res.add(e);
+            for (K k : buckets[i]) {
+                res.add(k);
             }
         }
         return res;
