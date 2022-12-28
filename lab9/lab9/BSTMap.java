@@ -38,9 +38,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         this.clear();
     }
 
-    /**
-     * Removes all the mappings from this map.
-     */
+    /** Removes all the mappings from this map. */
     @Override
     public void clear() {
         root = null;
@@ -108,7 +106,6 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         }
         return null;
     }
-
     private Node removeRecursiveHelper(Node node, K key) {
         // 1. No child, 2. Single child, 3. Two child nodes.
         // a. Left child right most ( < node, > node.left, < node.right)
@@ -162,15 +159,12 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         }
         return node;
     }
-
     @Override
     public Iterator<K> iterator() {
         return keySet().iterator();
     }
 
-    /**
-     * Helper function to KeySet to add keys.
-     */
+    /** Helper function to KeySet to add keys. */
     private void addKeys(Node node, HashSet set) {
         // Pre-order transversal
         if (node == null) {
@@ -212,6 +206,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             node.left = putRecursiveHelper(key, value, node.left);
         } else if (cmp > 0) {
             node.right = putRecursiveHelper(key, value, node.right);
+        } else {
+            // Update current node value.
+            node.value = value;
         }
         return node;
     }
