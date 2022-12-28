@@ -1,12 +1,28 @@
 package lab9tester;
 
+import java.util.Set;
+import java.util.HashSet;
 import static org.junit.Assert.*;
-
 import org.junit.Test;
-import lab9.BSTMap;
 
+import lab9.*;
 
-public class TestBSTMap {
+public class TestBSTAVLMap {
+    @Test
+    public void testLeftRotate() {
+        BSTAVLMap<String,String> q = new BSTAVLMap<>();
+        for (int i = 0; i < 100000; ++i) {
+            q.put(i + " ", i + "");
+        }
+    }
+    @Test
+    public void testRightRotate() {
+        BSTAVLMap<String,String> q = new BSTAVLMap<>();
+        q.put("c","c");
+        q.put("b","b");
+        q.put("a","a");
+        q.testRightRotate();
+    }
 
     @Test
     public void sanityGenericsTest() {
@@ -84,4 +100,5 @@ public class TestBSTMap {
         assertTrue(b.containsKey("hi"));
         assertTrue(b.get("hi") != null);
     }
+
 }
