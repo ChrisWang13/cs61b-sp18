@@ -1,5 +1,8 @@
 import edu.princeton.cs.algs4.Queue;
 import org.junit.Test;
+
+import java.util.Iterator;
+
 import static org.junit.Assert.*;
 
 public class MergeSort {
@@ -41,6 +44,27 @@ public class MergeSort {
         }
         return nestedQueue;
     }
+    /** Copy the [start, end) part of original queue, return new copied queue. */
+    private static <Item extends Comparable> Queue<Item> copyQueue(Queue<Item> items, int start, int end) {
+        // Check valid range
+        assert(start >= 0 && end <= items.size());
+        Queue<Item> copiedNewQueue = new Queue<>();
+        Iterator<Item> itr = items.iterator();
+        int idx = -1;
+        while (itr.hasNext() && idx != start - 1) {
+            idx = idx + 1;
+            itr.next();
+        }
+        assert(idx == start - 1);
+        while (itr.hasNext() && idx >= start - 1 && idx < end - 1) {
+            idx = idx + 1;
+            Item item = itr.next();
+            copiedNewQueue.enqueue(item);
+        }
+        // Check boundary of idx
+        assert(copiedNewQueue.size() == end - start);
+        return copiedNewQueue;
+    }
 
     /**
      * Returns a new queue that contains the items in q1 and q2 in sorted order.
@@ -65,57 +89,81 @@ public class MergeSort {
         if (items.size() == 1)
             return items;
         int mid = items.size() / 2;
-        Queue<Item> left = new Queue<>();
-        Queue<Item> right = new Queue<>();
-        // Split the queue into half, since queue has intrinsic marked left and right boundary index.
-        for (Item item: items) {
-            if (mid > 0) {
-                left.enqueue(item);
-            } else {
-                right.enqueue(item);
-            }
-            mid = mid - 1;
-        }
+//        // Copy part of original queue (items)
+//        Queue<Item> left = new Queue<>();
+//        Queue<Item> right = new Queue<>();
+//        // Split the queue into half, since queue has intrinsic marked left and right boundary index.
+//        for (Item item: items) {
+//            if (mid > 0) {
+//                left.enqueue(item);
+//            } else {
+//                right.enqueue(item);
+//            }
+//            mid = mid - 1;
+//        }
         // [0, mid) part of original queue
-        Queue<Item> leftSortedQueue = mergeSort(left);
+        Queue<Item> left = copyQueue(items, 0, mid);
         // [mid, items.size()) part of original queue
+        Queue<Item> right = copyQueue(items, mid, items.size());
+
+        Queue<Item> leftSortedQueue = mergeSort(left);
         Queue<Item> rightSortedQueue = mergeSort(right);
         // Merge two sorted queue
         Queue<Item> finalSortedQueue = mergeSortedQueues(leftSortedQueue, rightSortedQueue);
         return finalSortedQueue;
     }
+
+    @Test
+    public void testCopyQueue() {
+        // arr = {1, 2, 3}
+        Queue<Integer> arr = new Queue<>();
+        for (int i = 1; i <= 3; ++i) {
+            arr.enqueue(i);
+        }
+        // [0, 2)
+        Queue<Integer> res = copyQueue(arr, 0, 2 );
+        // expected = {1, 2}
+        Queue<Integer> expected = new Queue<>();
+        for (int i = 1; i <= 2; ++i) {
+            expected.enqueue(i);
+        }
+        assertEquals(expected.toString(), res.toString());
+    }
+
     @Test
     public void testMergeSortedQueues() {
-        // arr1
-        Queue<Integer> arr1 = new Queue<Integer>();
+        // arr1 = {1, 2, 3}
+        Queue<Integer> arr1 = new Queue<>();
         for (int i = 1; i <= 3; ++i) {
             arr1.enqueue(i);
         }
-        // arr2
-        Queue<Integer> arr2 = new Queue<Integer>();
+        // arr2 = {1, 2, 3}
+        Queue<Integer> arr2 = new Queue<>();
         for (int i = 1; i <= 3; ++i) {
             arr2.enqueue(i);
         }
-        // expected
-        Queue<Integer> expected = new Queue<Integer>();
+        Queue<Integer> res = mergeSortedQueues(arr1, arr2);
+        // expected = {1, 1, 2, 2, 3, 3}
+        Queue<Integer> expected = new Queue<>();
         for (int i = 1; i <= 3; ++i) {
             expected.enqueue(i);
             expected.enqueue(i);
         }
-        Queue<Integer> res = mergeSortedQueues(arr1, arr2);
         assertEquals(expected.toString(), res.toString());
     }
     @Test
     public void testMergeSort() {
-        Queue<Integer> arr = new Queue<Integer>();
+        // arr = {3, 2, 1}
+        Queue<Integer> arr = new Queue<>();
         for (int i = 3; i >= 1; --i) {
             arr.enqueue(i);
         }
-        Queue<Integer> expected = new Queue<Integer>();
+        Queue<Integer> res = mergeSort(arr);
+        // expected = {1, 2, 3}
+        Queue<Integer> expected = new Queue<>();
         for (int i = 1; i <= 3; ++i) {
             expected.enqueue(i);
         }
-        Queue<Integer> res = mergeSort(arr);
         assertEquals(expected.toString(), res.toString());
     }
 }
