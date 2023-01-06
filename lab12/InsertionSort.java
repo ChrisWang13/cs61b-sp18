@@ -16,7 +16,7 @@ public class InsertionSort {
         for (int cur = 0; cur < len; ++cur) {
             for (int mv = cur; mv >= 1; --mv) {
                 // Push mv to the front.
-                while (item[mv].compareTo(item[mv - 1]) < 0) {
+                if (item[mv].compareTo(item[mv - 1]) < 0) {
                     swap(item, mv, mv - 1);
                 }
             }
