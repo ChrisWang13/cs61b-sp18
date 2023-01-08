@@ -171,7 +171,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     }
 
     /** Check if the array is min-heap or not. */
-    private boolean checkMinHeap() {
+    private boolean checkIsMinHeap() {
         for (int i = 1; i < size / 2; ++i) {
             int minPriChildIdx = min(leftIndex(i), rightIndex(i));
             if (getNode(i).priority() > getNode(minPriChildIdx).priority()) {
@@ -195,7 +195,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         size = size + 1;
         // newIdx is now end of array, index = size
         int newIdx = size;
-        contents[newIdx] = new ArrayHeap<T>.Node((T)item, priority);
+        contents[newIdx] = new ArrayHeap<T>.Node(item, priority);
         swim(newIdx);
     }
 
@@ -205,7 +205,10 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T peek() {
-        return (T)contents[1];
+        if (size <= 0) {
+            return null;
+        }
+        return contents[1].myItem;
     }
 
     /**
@@ -219,11 +222,22 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T removeMin() {
-        T minVal = contents[1].myItem;
+        // No node, size = 0
+        if (size == 0) {
+            return null;
+        }
+        T minVal = peek();
         swap(1, size);
         contents[size] = null;
         size = size - 1;
+        // if size = 0 now, then index > size, out of bound.
+        // Fix: Check if size == 1 before sinking the root
+        if (size == 0) {
+            return minVal;
+        }
+        assert size >= 1;
         sink(1);
+        assert checkIsMinHeap();
         return minVal;
     }
 
@@ -277,7 +291,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
                 }
             }
         }
-        assert checkMinHeap();
+        assert checkIsMinHeap();
     }
 
     /**
@@ -480,6 +494,20 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         while (pq.size() > 1) {
             assertEquals(expected[i], pq.removeMin());
             i += 1;
+        }
+    }
+
+    @Test
+    public void testRemoveEdgeCase() {
+        ExtrinsicPQ<String> pq = new ArrayHeap<>();
+        pq.insert("a", 1);
+        pq.insert("b", 2);
+        pq.insert("c", 3);
+        int i = 0;
+        String[] expected = {"a", "b", "c"};
+        while (pq.size() >= 1) {
+            assertEquals(expected[i], pq.removeMin());
+            i++;
         }
     }
 
