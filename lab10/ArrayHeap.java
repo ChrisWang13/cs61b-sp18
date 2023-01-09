@@ -294,9 +294,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         assert checkIsMinHeap();
     }
 
-    /**
-     * Prints out the heap sideways. Provided for you.
-     */
+    /** Prints out the heap sideways. */
     @Override
     public String toString() {
         return toStringHelper(1, "");
@@ -344,6 +342,49 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         Node[] temp = new ArrayHeap.Node[capacity];
         if (this.contents.length - 1 >= 0) System.arraycopy(this.contents, 1, temp, 1, this.contents.length - 1);
         this.contents = temp;
+    }
+
+    /** Heap sort function for node. */
+    public void heapSort() {
+        // Build in-place heap, NlogN
+
+//        for (int i = size; i >= 1; --i) {
+//            // swim is bottom up from last item
+//            swim(i);
+//        }
+
+        for (int i = size / 2; i >= 1; --i) {
+            sink(i);
+        }
+        assert checkIsMinHeap();
+        // min-heap, the smallest item at the front,
+        // move item to the last and removeMin
+        int oldSize = size;
+        for (int i = size; i >= 1; --i) {
+            swap(1, i);
+            size = size - 1;
+            if (size >= 1) {
+                sink(1);
+            }
+        }
+        assert size == 0;
+        size = oldSize;
+    }
+
+    @Test
+    public void testHeapSort() {
+        ArrayHeap<String> pq = new ArrayHeap<>();
+        pq.size = 7;
+        // Input: Min to max
+        for (int i = 1; i <= pq.size; i += 1) {
+            int rand = (int) (Math.random() * pq.size);
+            pq.contents[i] = new ArrayHeap<String>.Node("x" + rand, rand);
+        }
+        pq.heapSort();
+        // Output: Max to min
+        for (int i = 1; i < pq.size; ++i) {
+            assert pq.contents[i].priority() >= pq.contents[i + 1].priority();
+        }
     }
 
     @Test
