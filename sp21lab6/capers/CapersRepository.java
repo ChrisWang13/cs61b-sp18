@@ -1,6 +1,8 @@
 package capers;
 
 import java.io.File;
+import java.io.IOException;
+
 import static capers.Utils.*;
 
 /** A repository for Capers 
@@ -8,7 +10,7 @@ import static capers.Utils.*;
  * The structure of a Capers Repository is as follows:
  *
  * .capers/ -- top level folder for all persistent data in your lab6 folder
- *    - dogs/ -- folder containing all of the persistent data for dogs
+ *    - dogs/ -- folder containing all the persistent data for dogs
  *    - story -- file containing the current story
  */
 
@@ -16,21 +18,22 @@ public class CapersRepository {
     /** Current Working Directory. */
     static final File CWD = new File(System.getProperty("user.dir"));
 
-    /** Main metadata folder. */
-    static final File CAPERS_FOLDER = null; // TODO Hint: look at the `join`
-                                            //      function in Utils
+    /** Main metadata folder, use path string join function to create root for repo. */
+    static final File CAPERS_FOLDER = join(CWD, ".capers");
 
-    /**
+     /**
      * Do require filesystem operations to allow for persistence.
      * (creates any necessary folders or files)
-     * Remember: recommended structure (you do not have to follow):
+     * Remember: recommended structure
      *
      * .capers/ -- top level folder for all persistent data in your lab6 folder
      *    - dogs/ -- folder containing all the persistent data for dogs
      *    - story -- file containing the current story
      */
     public static void setupPersistence() {
-        // TODO
+        CAPERS_FOLDER.mkdir();
+        Dog.DOG_FOLDER.mkdir();
+        // TODO: story file
     }
 
     /**
@@ -39,7 +42,20 @@ public class CapersRepository {
      * @param text String of the text to be appended to the story
      */
     public static void writeStory(String text) {
-        // TODO
+        // Create dest file descriptor in .caper/file
+        File story = join(CAPERS_FOLDER, "story");
+        // Check if story has been created or not, insert
+        // (oldText + '\n' + text) to overwrite story
+        String oldText = null;
+        String newText = null;
+        if (story.exists()) {
+            oldText = readContentsAsString(story);
+            newText = oldText + '\n' + text;
+        } else {
+            newText = text;
+        }
+        Utils.writeContents(story, newText);
+        System.out.println(newText);
     }
 
     /**

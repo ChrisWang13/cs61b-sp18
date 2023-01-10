@@ -5,7 +5,7 @@ import java.io.File;
 import static capers.Utils.*;
 
 /** Canine Capers: A Gitlet Prelude.
- * @author TODO
+ * @author ChrisWang13
 */
 public class Main {
     /**
@@ -41,7 +41,7 @@ public class Main {
         if (args.length == 0) {
             Utils.exitWithError("Must have at least one argument");
         }
-
+        // Set up folder .caper and sub folder .caper/dog
         CapersRepository.setupPersistence();
         String text;
         switch (args[0]) {

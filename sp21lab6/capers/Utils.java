@@ -54,15 +54,12 @@ class Utils {
     static void writeContents(File file, Object... contents) {
         try {
             if (file.isDirectory()) {
-                throw
-                        new IllegalArgumentException("cannot overwrite directory");
+                throw new IllegalArgumentException("cannot overwrite directory");
             }
-            BufferedOutputStream str =
-                    new BufferedOutputStream(Files.newOutputStream(file.toPath()));
+            BufferedOutputStream str = new BufferedOutputStream(Files.newOutputStream(file.toPath()));
             for (Object obj : contents) {
-                if (obj instanceof byte[]) {
-                    str.write((byte[]) obj);
-                } else {
+                if (obj instanceof byte[]) str.write((byte[]) obj);
+                else {
                     str.write(((String) obj).getBytes(StandardCharsets.UTF_8));
                 }
             }
@@ -74,16 +71,13 @@ class Utils {
 
     /** Return an object of type T read from FILE, casting it to EXPECTEDCLASS.
      *  Throws IllegalArgumentException in case of problems. */
-    static <T extends Serializable> T readObject(File file,
-                                                 Class<T> expectedClass) {
+    static <T extends Serializable> T readObject(File file, Class<T> expectedClass) {
         try {
-            ObjectInputStream in =
-                    new ObjectInputStream(new FileInputStream(file));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
             T result = expectedClass.cast(in.readObject());
             in.close();
             return result;
-        } catch (IOException | ClassCastException
-                | ClassNotFoundException excp) {
+        } catch (IOException | ClassCastException | ClassNotFoundException excp) {
             throw new IllegalArgumentException(excp.getMessage());
         }
     }
@@ -96,14 +90,14 @@ class Utils {
 
     /* OTHER FILE UTILITIES */
 
-    /** Return the concatentation of FIRST and OTHERS into a File designator,
+    /** Return the concatenation of FIRST and OTHERS into a File designator,
      *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
      *  method. */
-     static File join(String first, String... others) {
+    static File join(String first, String... others) {
         return Paths.get(first, others).toFile();
     }
 
-    /** Return the concatentation of FIRST and OTHERS into a File designator,
+    /** Return the concatenation of FIRST and OTHERS into a File designator,
      *  analogous to the {@link java.nio.file.Paths.#get(String, String[])}
      *  method. */
     static File join(File first, String... others) {

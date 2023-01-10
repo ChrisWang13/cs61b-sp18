@@ -2,16 +2,16 @@ package capers;
 
 import java.io.File;
 import java.io.Serializable;
+
 import static capers.Utils.*;
 
 /** Represents a dog that can be serialized.
- * @author TODO
+ * @author ChrisWang13
 */
-public class Dog { // TODO
+public class Dog {
 
-    /** Folder that dogs live in. */
-    static final File DOG_FOLDER = null; // TODO (hint: look at the `join`
-                                         //      function in Utils)
+    /** Folder that dogs live in, access static varible in same package with CLASS.variable. */
+    static final File DOG_FOLDER = join(CapersRepository.CAPERS_FOLDER, "dogs");
 
     /** Age of dog. */
     private int age;
