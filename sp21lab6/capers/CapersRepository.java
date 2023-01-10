@@ -46,8 +46,8 @@ public class CapersRepository {
         File story = join(CAPERS_FOLDER, "story");
         // Check if story has been created or not, insert
         // (oldText + '\n' + text) to overwrite story
-        String oldText = null;
-        String newText = null;
+        String oldText;
+        String newText;
         if (story.exists()) {
             oldText = readContentsAsString(story);
             newText = oldText + '\n' + text;
@@ -64,7 +64,10 @@ public class CapersRepository {
      * Also prints out the dog's information using toString().
      */
     public static void makeDog(String name, String breed, int age) {
-        // TODO
+        // Create an instance of dog
+        Dog dog = new Dog(name, breed, age);
+        dog.saveDog();
+        System.out.println(dog.toString());
     }
 
     /**
@@ -74,6 +77,8 @@ public class CapersRepository {
      * @param name String name of the Dog whose birthday we're celebrating.
      */
     public static void celebrateBirthday(String name) {
-        // TODO
+        Dog dog = Dog.fromFile(name);
+        dog.haveBirthday();
+        dog.saveDog();
     }
 }
