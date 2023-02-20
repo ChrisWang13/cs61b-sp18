@@ -140,7 +140,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
             else if (i == 1) {
                 Node leftRightMostNode = getRightMost(node.left);
                 // Delete node by returning null to parent or return left or right subtree to parent node.
-                leftRightMostNode.left = removeRecursiveHelper(node.left, leftRightMostNode.key);
+                leftRightMostNode.left = removeRecursiveHelper(node, leftRightMostNode.key);
                 leftRightMostNode.right = node.right;
                 return leftRightMostNode;
             }
